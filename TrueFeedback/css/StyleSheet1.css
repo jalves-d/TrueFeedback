@@ -1,0 +1,27 @@
+﻿.pagination {
+    line-height: 26px;
+}
+
+    .pagination span {
+        padding: 10px;
+        border: solid 1px #0026ff;
+        text-decoration: none;
+        white-space: nowrap;
+        background: #ffffff;
+    }
+
+    .pagination a,
+    .pagination a:visited {
+        text-decoration: none;
+        padding: 10px;
+        white-space: nowrap;
+    }
+
+        .pagination a:hover,
+        .pagination a:active {
+            padding: 10px;
+            border: solid 1px #0026ff;
+            text-decoration: none;
+            white-space: nowrap;
+            background: #ffffff;
+        }
