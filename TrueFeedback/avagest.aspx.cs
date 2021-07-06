@@ -1,8 +1,11 @@
-﻿using System;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -63,7 +66,6 @@ namespace TrueFeedback
                 {
                     return false;
                 }
-
 
             }
             catch (Exception ex)
@@ -163,7 +165,6 @@ namespace TrueFeedback
                         TextBox2.Text = read.GetValue(1).ToString();
                         TextBox7.Text = read.GetValue(2).ToString();
                     }
-
                 }
                 else
                 {

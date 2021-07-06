@@ -82,13 +82,13 @@ namespace TrueFeedback
                     feedb.Open();
                 }
 
-                SqlCommand cmd = new SqlCommand("UPDATE master_agent_tbl SET name=@name,consola=@consola,email=@email,contacto=@contacto,class=@class WHERE tp='" + TextBox1.Text.Trim() + "'", feedb);
+                SqlCommand cmd = new SqlCommand("UPDATE master_agent_tbl SET name=@name,consola=@consola,email=@email,contacto=@contacto,equipa=@equipa WHERE tp='" + TextBox1.Text.Trim() + "'", feedb);
 
                 cmd.Parameters.AddWithValue("@name", TextBox2.Text.Trim());
                 cmd.Parameters.AddWithValue("@consola", TextBox7.Text.Trim());
                 cmd.Parameters.AddWithValue("@email", TextBox4.Text.Trim());
                 cmd.Parameters.AddWithValue("@contacto", TextBox3.Text.Trim());
-                cmd.Parameters.AddWithValue("@class", DropDownList1.SelectedItem.Value);
+                cmd.Parameters.AddWithValue("@equipa", DropDownList1.SelectedItem.Value);
 
                 cmd.ExecuteNonQuery();
                 feedb.Close();
@@ -193,13 +193,13 @@ namespace TrueFeedback
                 {
                     feedb.Open();
                 }
-                SqlCommand cmd = new SqlCommand("INSERT INTO master_agent_tbl(tp,name,consola,email,contacto,class) values(@tp,@name,@consola,@email,@contacto,@class)", feedb);
+                SqlCommand cmd = new SqlCommand("INSERT INTO master_agent_tbl(tp,name,consola,email,contacto,equipa) values(@tp,@name,@consola,@email,@contacto,@equipa)", feedb);
                 cmd.Parameters.AddWithValue("@tp", TextBox1.Text.Trim());
                 cmd.Parameters.AddWithValue("@name", TextBox2.Text.Trim());
                 cmd.Parameters.AddWithValue("@consola", TextBox7.Text.Trim());
                 cmd.Parameters.AddWithValue("@email", TextBox4.Text.Trim());
                 cmd.Parameters.AddWithValue("@contacto", TextBox3.Text.Trim());
-                cmd.Parameters.AddWithValue("@class", DropDownList1.SelectedItem.Value);
+                cmd.Parameters.AddWithValue("@equipa", DropDownList1.SelectedItem.Value);
                 cmd.ExecuteNonQuery();
                 feedb.Close();
                 Response.Write("<script>alert('Agente adicionado com sucesso !');</script>");

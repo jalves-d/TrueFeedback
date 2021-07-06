@@ -66,13 +66,14 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label>Classificação</label>
+                                <label>Equipa</label>
                                 <div class="form-group">
-                                    <asp:DropDownList class="form-control" mode="multiline" ID="DropDownList1" runat="server" placeholder="Classificação">
-                                        <asp:ListItem Text="Bom" Value="Bom" />
-                                        <asp:ListItem Text="Razoável Mais" Value="Razoável Mais" />
-                                        <asp:ListItem Text="Razoável Menos" Value="Razoável Menos" />
-                                        <asp:ListItem Text="Mau" Value="Mau" />
+                                    <asp:DropDownList class="form-control" mode="multiline" ID="DropDownList1" runat="server" placeholder="Equipa">
+                                        <asp:ListItem Text="Rookie 1" Value="Rookie 1" />
+                                        <asp:ListItem Text="Rookie 2" Value="Rookie 2" />
+                                        <asp:ListItem Text="Junior" Value="Junior" />
+                                        <asp:ListItem Text="Pré Sênior" Value="Pré Sênior" />
+                                        <asp:ListItem Text="Sênior" Value="Sênior" />
                                     </asp:DropDownList>
                                 </div>
                             </div>
@@ -129,8 +130,8 @@
                                                                     <asp:Label ID="Label3" runat="server" Font-Bold="True" Text='<%# Eval("name") %>'></asp:Label>
                                                                     &nbsp;| Consola :
                                                                     <asp:Label ID="Label4" runat="server" Font-Bold="True" Text='<%# Eval("consola") %>'></asp:Label>
-                                                                    &nbsp;| Classificação :
-                                                                    <asp:Label ID="Label11" runat="server" Font-Bold="True" Text='<%# Eval("class") %>'></asp:Label>
+                                                                    &nbsp;| Equipa :
+                                                                    <asp:Label ID="Label11" runat="server" Font-Bold="True" Text='<%# Eval("equipa") %>'></asp:Label>
                                                                 </div>
                                                             </div>
                                                             <div class="row">

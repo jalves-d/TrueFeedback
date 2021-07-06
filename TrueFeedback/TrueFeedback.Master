@@ -27,16 +27,26 @@
                             <a class="nav-link active btn btn-lg text-white" aria-current="page" href="HomeLogin.aspx"><h2></h2>Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-lg text-white" href="agentgest.aspx"><h2></h2>Agentes</a>
+                            <a class="nav-link btn  btn-lg text-white" href="avagest.aspx"><h2></h2>Avaliadores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn  btn-lg text-white" href="avagest.aspx"><h2></h2>Avaliadores</a>
+                            <a class="nav-link btn btn-lg text-white" href="agentgest.aspx"><h2></h2>Agentes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link btn  btn-lg text-white" href="feedbackcgest.aspx"><h2></h2>Feedbacks</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link btn  btn-lg text-white" href="mongest.aspx"><h2></h2>Monitorizações</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn  btn-lg text-white" href="regdia.aspx">
+                                <h2></h2>
+                                Registo Diário</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn  btn-lg text-white" href="tmar.aspx">
+                                <h2></h2>
+                                2Mares</a>
                         </li>
                     </ul>
                 </div>

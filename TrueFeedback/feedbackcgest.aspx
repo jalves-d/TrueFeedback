@@ -38,7 +38,7 @@
                      <div class="col-md-4">
                         <label>Nome do Agente :</label>
                         <div class="form-group">
-                           <asp:TextBox CssClass="form-control" ID="TextBox2" runat="server" placeholder="Nome do Agente"></asp:TextBox>
+                           <asp:TextBox CssClass="form-control" ID="TextBox2" runat="server" ReadOnly="true" placeholder="Nome do Agente"></asp:TextBox>
                         </div>
                      </div>
                      <div class="col-md-5">
@@ -146,9 +146,9 @@
                      </div>
                   </div>
                   <div class="row">
-                      <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:TrueFeedbackConnectionString %>" SelectCommand="SELECT * FROM [master_feedback_tbl]"></asp:SqlDataSource>
+                      <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:TrueFeedbackConnectionString %>" SelectCommand="SELECT tp,name,tp_agent,dados_contrato,tp_avaliador,day,month,year,observ,meio_comun,tipologia FROM TrueFeedback.dbo.master_feedback_tbl,TrueFeedback.dbo.master_agent_tbl WHERE TrueFeedback.dbo.master_agent_tbl.tp = TrueFeedback.dbo.master_feedback_tbl.tp_agent"></asp:SqlDataSource>
                      <div class="col">
-                        <asp:GridView class="table table-striped table-bordered" ID="GridView1" AllowPaging="True" PageSize="3" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource1">
+                        <asp:GridView class="table table-striped table-bordered" ID="GridView1" Control="ContentPlaceHolder1_GridView1" AllowPaging="True" PageSize="3" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource1">
                             <Columns>
                                 <asp:TemplateField>
                                     <ItemTemplate>
