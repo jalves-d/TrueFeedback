@@ -18,7 +18,7 @@
                             <div class="col">
                                 <center>
                                     <h2></h2>
-                                    <img src="img/telefone-fixo.png" width="100px" />
+                                    <img src="img/verify.png" width="100px" />
                                     <h2></h2>
                                 </center>
                             </div>
@@ -166,7 +166,7 @@
                             <div class="col">
                                 <center>
                                     <h2></h2>
-                                    <img src="img/telefone-fixo.png" width="100px" />
+                                    <img src="img/verify.png" width="100px" />
                                     <h2></h2>
                                 </center>
                             </div>

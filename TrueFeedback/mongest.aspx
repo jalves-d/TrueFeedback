@@ -40,14 +40,14 @@
                             <div class="col-md-4">
                                 <label>Nome do Agente :</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="TextBox2" runat="server" placeholder="Nome do Agente"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ReadOnly="true" ID="TextBox2" runat="server" placeholder="Nome do Agente"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <label>NIF/ Ref. do Contrato/ Reclamação</label>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <asp:TextBox CssClass="form-control mr-1" ID="TextBox7" runat="server" placeholder="Dados"></asp:TextBox>
+                                        <asp:TextBox CssClass="form-control mr-1" TextMode="Number" ID="TextBox7" runat="server" placeholder="Dados"></asp:TextBox>
                                     </div>
                                 </div>
                             </div>
@@ -65,20 +65,20 @@
                                 <label>Dia</label>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <asp:TextBox CssClass="form-control" ID="TextBox5" runat="server" placeholder="Dia"></asp:TextBox>
+                                        <asp:TextBox CssClass="form-control" ID="TextBox5" TextMode="Number" runat="server" placeholder="Dia"></asp:TextBox>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <label>Mês</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="TextBox6" runat="server" placeholder="Mês"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="TextBox6" TextMode="Number" runat="server" placeholder="Mês"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <label>Ano</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="TextBox8" runat="server" placeholder="Ano"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="TextBox8" TextMode="Number" runat="server" placeholder="Ano"></asp:TextBox>
                                 </div>
                             </div>
                         </div>
@@ -155,7 +155,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:TrueFeedbackConnectionString %>" SelectCommand="SELECT * FROM [master_monit_tbl]"></asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:TrueFeedbackConnectionString %>" SelectCommand=""></asp:SqlDataSource>
                             <div class="col">
                                 <asp:GridView class="table table-striped table-bordered" AllowPaging="true" ID="GridView1" PageSize="3" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource1" OnSelectedIndexChanged="GridView1_SelectedIndexChanged">
                                     <Columns>
@@ -207,6 +207,12 @@
                                     <PagerSettings Mode="Numeric"></PagerSettings>
                                     <PagerStyle ForeColor="#0026ff" HorizontalAlign="Left" CssClass="pagination pagination-lg" />
                                 </asp:GridView>
+                                <div class="row">
+                                    <div class="btn-group" role="group">
+                                        <asp:Button class="btn nav-link btn-block btn-primary text-white" OnClick="Download" Style="background-color: #00008B" ID="Button5" runat="server" Text="Download" BorderColor="White" />
+                                    </div>
+                                </div>
+                                <asp:Label ID="newtest" Visible="false" runat="server"><h2></h2><h1><center>Lista de Monitorizações</center></h1><h2></h2></asp:Label>
                             </div>
                         </div>
                     </div>

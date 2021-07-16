@@ -45,7 +45,7 @@
                         <label>NIF/ Ref. do Contrato/ Reclamação</label>
                         <div class="form-group">
                            <div class="input-group">
-                              <asp:TextBox CssClass="form-control mr-1" ID="TextBox7" runat="server" placeholder="Dados"></asp:TextBox>
+                              <asp:TextBox CssClass="form-control mr-1" ID="TextBox7" TextMode="Number" runat="server" placeholder="Dados"></asp:TextBox>
                            </div>
                         </div>
                      </div>
@@ -146,7 +146,7 @@
                      </div>
                   </div>
                   <div class="row">
-                      <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:TrueFeedbackConnectionString %>" SelectCommand="SELECT tp,name,tp_agent,dados_contrato,tp_avaliador,day,month,year,observ,meio_comun,tipologia FROM TrueFeedback.dbo.master_feedback_tbl,TrueFeedback.dbo.master_agent_tbl WHERE TrueFeedback.dbo.master_agent_tbl.tp = TrueFeedback.dbo.master_feedback_tbl.tp_agent"></asp:SqlDataSource>
+                      <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:TrueFeedbackConnectionString %>" SelectCommand=""></asp:SqlDataSource>
                      <div class="col">
                         <asp:GridView class="table table-striped table-bordered" ID="GridView1" Control="ContentPlaceHolder1_GridView1" AllowPaging="True" PageSize="3" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource1">
                             <Columns>
@@ -198,6 +198,12 @@
                             <PagerSettings Mode="Numeric"></PagerSettings>
                             <PagerStyle ForeColor="#0026ff" HorizontalAlign="Left" CssClass="pagination pagination-lg" />
                         </asp:GridView>
+                         <div class="row">
+                             <div class="btn-group" role="group">
+                                 <asp:Button class="btn nav-link btn-block btn-primary text-white" OnClick="Download" Style="background-color: #00008B" ID="Button5" runat="server" Text="Download" BorderColor="White" />
+                             </div>
+                         </div>
+                         <asp:Label ID="newtest" Visible="false" runat="server"><h2></h2><h1><center>Lista de Feedbacks</center></h1><h2></h2></asp:Label>
                      </div>
                   </div>
                </div>

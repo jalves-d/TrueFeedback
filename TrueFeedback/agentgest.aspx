@@ -44,6 +44,20 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
+                                <label>Password</label>
+                                <div class="form-group">
+                                    <asp:TextBox CssClass="form-control" ID="TextBox8" runat="server" TextMode="Password" placeholder="Password"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label>NIF</label>
+                                <div class="form-group">
+                                    <asp:TextBox CssClass="form-control" ID="TextBox9" TextMode="Number" runat="server" placeholder="NIF"></asp:TextBox>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <label>Email</label>
                                 <div class="form-group">
                                     <asp:TextBox class="form-control" mode="multiline" ID="TextBox4" runat="server" placeholder="Email"></asp:TextBox>
@@ -53,7 +67,7 @@
                                 <label>Consola</label>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <asp:TextBox CssClass="form-control mr-1" ID="TextBox7" runat="server" placeholder="Login"></asp:TextBox>
+                                        <asp:TextBox CssClass="form-control mr-1" TextMode="Number" ID="TextBox7" runat="server" placeholder="Login"></asp:TextBox>
                                     </div>
                                 </div>
                             </div>
@@ -150,6 +164,12 @@
                                         </asp:TemplateField>
                                     </Columns>
                                 </asp:GridView>
+                                <div class="row">
+                                    <div class="btn-group" role="group">
+                                        <asp:Button class="btn nav-link btn-block btn-primary text-white" OnClick="Download" Style="background-color: #00008B" ID="Button5" runat="server" Text="Download" BorderColor="White" />
+                                    </div>
+                                </div>
+                                <asp:Label ID="newtest" Visible="false" runat="server"><h2></h2><h1><center>Lista de Agentes</center></h1><h2></h2></asp:Label>
                             </div>
                         </div>
                     </div>

@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label>TP do Avaliador</label>
                                 <div class="form-group">
                                     <div class="input-group">
@@ -35,13 +35,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label>Nome do Avaliador :</label>
                                 <div class="form-group">
                                     <asp:TextBox CssClass="form-control" ID="TextBox2" runat="server" placeholder="Nome Avaliador"></asp:TextBox>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Password :</label>
+                                <div class="form-group">
+                                    <asp:TextBox CssClass="form-control" ID="TextBox4" TextMode="Password" runat="server" placeholder="Password"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <label>Consola</label>
                                 <div class="form-group">
                                     <div class="input-group">
@@ -108,6 +116,12 @@
                                         </asp:TemplateField>
                                     </Columns>
                                 </asp:GridView>
+                                <div class="row">
+                                    <div class="btn-group" role="group">
+                                        <asp:Button class="btn nav-link btn-block btn-primary text-white" OnClick="Download" Style="background-color: #00008B" ID="Button5" runat="server" Text="Download" BorderColor="White" />
+                                    </div>
+                                </div>
+                                <asp:Label ID="newtest" Visible="false" runat="server"><h2></h2><h1><center>Lista de Feedbacks</center></h1><h2></h2></asp:Label>
                             </div>
                         </div>
                     </div>

@@ -1,9 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/TrueFeedback.Master" AutoEventWireup="true" CodeBehind="HomeLogin.aspx.cs" Inherits="TrueFeedback.HomeLogin" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/TrueFeedback.Master" AutoEventWireup="true" CodeBehind="admlog.aspx.cs" Inherits="TrueFeedback.admlog" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-        <div class="container">
+            <div class="container">
         <div class="row">
             <div class="col-md-6 mx-auto">
                 <div class="card bg-transparent">
@@ -19,7 +18,7 @@
                         <div class="row">
                             <div class="col text-white">
                                 <center>
-                                    <h3>Login</h3>
+                                    <h3>Admin Login</h3>
                                 </center>
                             </div>
                         </div>
@@ -34,11 +33,6 @@
                                     <asp:TextBox ID="TextBox1" CssClass="form-control" runat="server" placeholder="TP"></asp:TextBox>
                                     <h2></h2>
                                     <asp:TextBox ID="TextBox2" CssClass="form-control" runat="server" placeholder="Password" TextMode="Password"></asp:TextBox>
-                                    <h2></h2>
-                                    <asp:DropDownList class="form-control" runat="server"  ID="DropDownList1">
-                                        <asp:ListItem Text="Agente" Value="Agente"></asp:ListItem>
-                                        <asp:ListItem Text="Avaliador" Value="Avaliador"></asp:ListItem>
-                                    </asp:DropDownList>
                                     <h2></h2>
                                     <asp:HyperLink class="btn-sm" ID="HyperLink1" href="#" runat="server">Change Password</asp:HyperLink>
                                     <h2></h2>

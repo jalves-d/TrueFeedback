@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace TrueFeedback
@@ -42,6 +43,34 @@ namespace TrueFeedback
         protected void Button4_Click(object sender, EventArgs e)
         {
             delAva();
+        }
+        protected void Download(object sender, EventArgs e)
+        {
+            GridView1.AllowPaging = false;
+            GridView1.DataBind();
+            PrintGrid();
+            GridView1.AllowPaging = true;
+        }
+        void PrintGrid()
+        {
+            HtmlForm form = new HtmlForm();
+            Response.ClearContent();
+            Response.AddHeader("content-disposition", string.Format("attachment; filename=Registos.html"));
+            Response.Charset = "";
+            Response.ContentType = "text/html";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            form.Attributes["runat"] = "server";
+            newtest.Visible = true;
+            form.Controls.Add(Header);
+            form.Controls.Add(newtest);
+            form.Controls.Add(GridView1);
+            this.Controls.Add(form);
+            Form.RenderControl(htw);
+            Response.Write(sw.ToString());
+            Response.Flush();
+            Response.End();
+            newtest.Visible = false;
         }
         bool checkAva()
         {
@@ -136,6 +165,7 @@ namespace TrueFeedback
         {
             TextBox1.Text = "";
             TextBox2.Text = "";
+            TextBox4.Text = "";
             TextBox7.Text = "";
         }
         void conAva()
@@ -186,9 +216,10 @@ namespace TrueFeedback
                 {
                     feedb.Open();
                 }
-                SqlCommand cmd = new SqlCommand("INSERT INTO master_ava_tbl(tp,name,consola) values(@tp,@name,@consola)", feedb);
+                SqlCommand cmd = new SqlCommand("INSERT INTO master_ava_tbl(tp,name,password,consola) values(@tp,@name,@password,@consola)", feedb);
                 cmd.Parameters.AddWithValue("@tp", TextBox1.Text.Trim());
                 cmd.Parameters.AddWithValue("@name", TextBox2.Text.Trim());
+                cmd.Parameters.AddWithValue("@password", TextBox4.Text.Trim());
                 cmd.Parameters.AddWithValue("@consola", TextBox7.Text.Trim());
                 cmd.ExecuteNonQuery();
                 feedb.Close();

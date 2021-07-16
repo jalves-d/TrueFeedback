@@ -43,6 +43,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.1.9, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.3.1\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
@@ -173,6 +179,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.1\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
@@ -251,44 +258,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="admlog.aspx" />
     <Content Include="agentgest.aspx" />
     <Content Include="avagest.aspx" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-grid.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-grid.min.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-grid.rtl.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-grid.rtl.min.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-reboot.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-reboot.min.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-reboot.rtl.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-reboot.rtl.min.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-utilities.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-utilities.min.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-utilities.rtl.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-utilities.rtl.min.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap.min.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap.rtl.css" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap.rtl.min.css" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.bundle.js" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.bundle.min.js" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.esm.js" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.esm.min.js" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.js" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.min.js" />
     <Content Include="css\StyleSheet1.css" />
+    <Content Include="css\StyleSheet2.css" />
     <Content Include="feedbackcgest.aspx" />
     <Content Include="HomeLogin.aspx" />
+    <Content Include="img\2mares-speech-analitycs.png" />
     <Content Include="img\customer-service-agent.png" />
     <Content Include="img\escolha.png" />
     <Content Include="img\feedback.png" />
+    <Content Include="img\register.png" />
+    <Content Include="img\supervisor.png" />
     <Content Include="img\telefone-fixo.png" />
+    <Content Include="img\verify.png" />
     <Content Include="mongest.aspx" />
     <Content Include="regdia.aspx" />
     <Content Include="rel.aspx" />
+    <Content Include="relag.aspx" />
     <Content Include="tmar.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="admlog.aspx.cs">
+      <DependentUpon>admlog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admlog.aspx.designer.cs">
+      <DependentUpon>admlog.aspx</DependentUpon>
+    </Compile>
     <Compile Include="agentgest.aspx.cs">
       <DependentUpon>agentgest.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -339,6 +338,13 @@
     <Compile Include="rel.aspx.designer.cs">
       <DependentUpon>rel.aspx</DependentUpon>
     </Compile>
+    <Compile Include="relag.aspx.cs">
+      <DependentUpon>relag.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="relag.aspx.designer.cs">
+      <DependentUpon>relag.aspx</DependentUpon>
+    </Compile>
     <Compile Include="tmar.aspx.cs">
       <DependentUpon>tmar.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -355,28 +361,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-grid.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-grid.min.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-grid.rtl.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-grid.rtl.min.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-reboot.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-reboot.min.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-reboot.rtl.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-reboot.rtl.min.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-utilities.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-utilities.min.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-utilities.rtl.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap-utilities.rtl.min.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap.min.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap.rtl.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\css\bootstrap.rtl.min.css.map" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.bundle.js.map" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.bundle.min.js.map" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.esm.js.map" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.esm.min.js.map" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.js.map" />
-    <Content Include="bootstrap-5.0.2-dist\js\bootstrap.min.js.map" />
     <None Include="packages.config" />
     <Content Include="TrueFeedback.Master" />
     <None Include="Web.Debug.config">
@@ -386,6 +370,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

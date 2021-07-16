@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace TrueFeedback
@@ -16,6 +18,14 @@ namespace TrueFeedback
         protected void Page_Load(object sender, EventArgs e)
         {
             GridView1.DataBind();
+            if (Convert.ToString(Session["role"]).Equals("Agente"))
+            {
+                Button2.Visible = false;
+                Button4.Visible = false;
+                Button3.Visible = false;
+                TextBox1.Text = Session["tp"].ToString();
+                TextBox1.ReadOnly = true;
+            }
         }
         protected void Button1_Click(object sender, EventArgs e)
         {
@@ -33,7 +43,34 @@ namespace TrueFeedback
         {
             delMonit();
         }
-
+        protected void Download(object sender, EventArgs e)
+        {
+            GridView1.AllowPaging = false;
+            GridView1.DataBind();
+            PrintGrid();
+            GridView1.AllowPaging = true;
+        }
+        void PrintGrid()
+        {
+            HtmlForm form = new HtmlForm();
+            Response.ClearContent();
+            Response.AddHeader("content-disposition", string.Format("attachment; filename=Registos.html"));
+            Response.Charset = "";
+            Response.ContentType = "text/html";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            form.Attributes["runat"] = "server";
+            newtest.Visible = true;
+            form.Controls.Add(Header);
+            form.Controls.Add(newtest);
+            form.Controls.Add(GridView1);
+            this.Controls.Add(form);
+            Form.RenderControl(htw);
+            Response.Write(sw.ToString());
+            Response.Flush();
+            Response.End();
+            newtest.Visible = false;
+        }
         void delMonit()
         {
             try

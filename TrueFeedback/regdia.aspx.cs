@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using ExcelDataReader;
 
 namespace TrueFeedback
 {
@@ -17,23 +18,23 @@ namespace TrueFeedback
         string strcon = ConfigurationManager.ConnectionStrings["feedb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-            GridView1.DataBind();
+          
         }
         protected void Button1_Click(object sender, EventArgs e)
         {
-            conMonit();
+            convertDataToDB();
         }
         protected void Button2_Click(object sender, EventArgs e)
         {
-            addMonit();
+            //addMonit();
         }
         protected void Button3_Click(object sender, EventArgs e)
         {
-            updateMonit();
+            //updateMonit();
         }
         protected void Button4_Click(object sender, EventArgs e)
         {
-            delMonit();
+            //delMonit();
         }
         protected void Download(object sender, EventArgs e)
         {
@@ -64,6 +65,66 @@ namespace TrueFeedback
             newtest.Visible = false;
         }
 
+        void convertDataToDB()
+        {
+           // FileStream stream = File.Open(FileUpload1.FileName, FileMode.Open, FileAccess.Read);
+            //...
+            //2. Reading from a OpenXml Excel file (2007 format; *.xlsx)
+            IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(FileUpload1.FileContent);
+            //...
+            //3. DataSet - The result of each spreadsheet will be created in the result.Tables
+            //4. DataSet - Create column names from first row
+            DataSet result = excelReader.AsDataSet();
+            int i = 0;
+
+            while(i < result.Tables[0].Rows.Count)
+            {
+                var nif = result.Tables[0].Rows[i][1].ToString();
+                var timecallday = result.Tables[0].Rows[i][3].ToString();
+                var callsday = result.Tables[0].Rows[i][4].ToString();
+                var dia = result.Tables[0].Rows[i][0].ToString();
+                var tr_vend = result.Tables[0].Rows[i][6].ToString();
+                var tr_imp = result.Tables[0].Rows[i][7].ToString();
+                var cb_imp = result.Tables[0].Rows[i][8].ToString();
+                var gest_dia = result.Tables[0].Rows[i][9].ToString();
+                addRegDay(nif, timecallday, callsday, dia, tr_vend, tr_imp, cb_imp, gest_dia);
+                i++;
+            }
+        }
+
+        void CalculateMonth(string first, string second)
+        {
+            DateTime currentdate = DateTime.Now;
+            try
+            {
+                SqlConnection feedb = new SqlConnection(strcon);
+                if (feedb.State == ConnectionState.Closed)
+                {
+                    feedb.Open();
+                }
+                SqlCommand cmd = new SqlCommand("SELECT tp,name,consola,tp_agente,tp_avaliador,day,month,year,tmo,num_gest,tr_vend,tr_imp,cb_imp FROM TrueFeedback.dbo.master_agent_tbl, TrueFeedback.dbo.master_regdia_tbl WHERE TrueFeedback.dbo.master_agent_tbl.tp = TrueFeedback.dbo.master_regdia_tbl.tp_agente AND TrueFeedback.dbo.master_regdia_tbl.year ='" + currentdate.Year + "'", feedb);
+                SqlDataAdapter mydb = new SqlDataAdapter(cmd);
+                DataTable dbtbl = new DataTable();
+                mydb.Fill(dbtbl);
+                int[] year = new int[12];
+                int[] cont = new int[12];
+                foreach (DataRow row in dbtbl.Rows)
+                {
+                    year[(Int32.Parse(row["month"].ToString())) - 1] += Int32.Parse(row[first].ToString());
+                    cont[(Int32.Parse(row["month"].ToString())) - 1] += Int32.Parse(row[second].ToString()); ;
+                }
+                for (int i=0; i < 12; i++)
+                {
+                    year[i] /= cont[i];
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.Write("<script>alert('" + ex.Message + "');</script>");
+            }
+
+        }
+/*
         void delMonit()
         {
             try
@@ -119,22 +180,13 @@ namespace TrueFeedback
             {
                 Response.Write("<script>alert('" + ex.Message + "');</script>");
             }
-        }
+        }*/
         void clearBox()
         {
             TextBox1.Text = "";
             TextBox2.Text = "";
             TextBox7.Text = "";
-            TextBox4.Text = "";
-            TextBox3.Text = "";
-            TextBox5.Text = "";
-            TextBox6.Text = "";
-            TextBox8.Text = "";
-            TextBox9.Text = "";
-            TextBox10.Text = "";
-            TextBox11.Text = "";
-            TextBox12.Text = "";
-        }
+        }/*
         void conMonit()
         {
             try
@@ -186,8 +238,8 @@ namespace TrueFeedback
             {
                 Response.Write("<script>alert('" + ex.Message + "');</script>");
             }
-        }
-        void addMonit()
+        }*/
+        void addRegDay(string nif, string timecallday, string callsday, string dia, string tr_vend, string tr_imp, string cb_imp, string gest_dia)
         {
             try
             {
@@ -196,17 +248,18 @@ namespace TrueFeedback
                 {
                     feedb.Open();
                 }
-                SqlCommand cmd = new SqlCommand("INSERT INTO master_regdia_tbl(tp_agente,tp_avaliador,day,month,year,tmo,num_gest,tr_vend,tr_imp,cb_imp) values(@tp_agente,@tp_avaliador,@day,@month,@year,@tmo,@num_gest,@tr_vend,@tr_imp,@cb_imp)", feedb);
-                cmd.Parameters.AddWithValue("@tp_agente", TextBox1.Text.Trim());
-                cmd.Parameters.AddWithValue("@tp_avaliador", TextBox4.Text.Trim());
-                cmd.Parameters.AddWithValue("@day", TextBox5.Text.Trim());
-                cmd.Parameters.AddWithValue("@month", TextBox6.Text.Trim());
-                cmd.Parameters.AddWithValue("@year", TextBox8.Text.Trim());
-                cmd.Parameters.AddWithValue("@tmo", TextBox9.Text.Trim());
-                cmd.Parameters.AddWithValue("@num_gest", TextBox10.Text.Trim());
-                cmd.Parameters.AddWithValue("@tr_vend", TextBox11.Text.Trim());
-                cmd.Parameters.AddWithValue("@tr_imp", TextBox3.Text.Trim());
-                cmd.Parameters.AddWithValue("@cb_imp", TextBox12.Text.Trim());
+                SqlCommand cmd = new SqlCommand("INSERT INTO master_regdia_tbl(nif,temp_dia,total_calls,day,month,year,tmo,num_gest,tr_vend,tr_imp,cb_imp) values(@nif,@temp_dia,@total_calls,@day,@month,@year,@tmo,@num_gest,@tr_vend,@tr_imp,@cb_imp)", feedb);
+                cmd.Parameters.AddWithValue("@nif", nif);
+                cmd.Parameters.AddWithValue("@temp_dia", timecallday);
+                cmd.Parameters.AddWithValue("@day", dia);
+                cmd.Parameters.AddWithValue("@month", DateTime.Now.Month.ToString()) ;
+                cmd.Parameters.AddWithValue("@year", DateTime.Now.Year.ToString());
+                cmd.Parameters.AddWithValue("@tmo", (Int32.Parse(timecallday) / Int32.Parse(callsday)).ToString());
+                cmd.Parameters.AddWithValue("@num_gest", gest_dia);
+                cmd.Parameters.AddWithValue("@tr_vend", tr_vend);
+                cmd.Parameters.AddWithValue("@tr_imp", tr_imp);
+                cmd.Parameters.AddWithValue("@cb_imp", cb_imp);
+                cmd.Parameters.AddWithValue("@total_calls", callsday);
                 cmd.ExecuteNonQuery();
                 feedb.Close();
                 Response.Write("<script>alert('Monitorização adicionado com sucesso !');</script>");

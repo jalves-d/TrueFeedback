@@ -7,6 +7,8 @@
     <title></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="css/StyleSheet1.css" rel="stylesheet" />
+    <link href="css/StyleSheet2.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
@@ -24,32 +26,37 @@
                 <div class="collapse navbar-collapse p-3 mb-2" id="navbarNavDropdown" style="background-color: #00008B">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active btn btn-lg text-white" aria-current="page" href="HomeLogin.aspx"><h2></h2>Home</a>
+                            <asp:LinkButton class="nav-link active btn btn-lg text-white" Visible="false" ID="LinkButton1" runat="server" href="homepage.aspx"><h2></h2>Home</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn  btn-lg text-white" href="avagest.aspx"><h2></h2>Avaliadores</a>
+                            <asp:LinkButton class="nav-link active btn btn-lg text-white" Visible="false" ID="LinkButton3" runat="server" href="agentgest.aspx"><h2></h2>Agentes</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-lg text-white" href="agentgest.aspx"><h2></h2>Agentes</a>
+                            <asp:LinkButton class="nav-link active btn btn-lg text-white" Visible="false" ID="LinkButton4" runat="server" href="feedbackcgest.aspx"><h2></h2>Feedbacks</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn  btn-lg text-white" href="feedbackcgest.aspx"><h2></h2>Feedbacks</a>
+                            <asp:LinkButton class="nav-link active btn btn-lg text-white" Visible="false" ID="LinkButton5" runat="server" href="mongest.aspx"><h2></h2>Monitorizações</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn  btn-lg text-white" href="mongest.aspx"><h2></h2>Monitorizações</a>
+                            <asp:LinkButton class="nav-link active btn btn-lg text-white" Visible="false" ID="LinkButton6" runat="server" href="tmar.aspx"><h2></h2>2Mares</asp:LinkButton>
+                        <li class="nav-item">
+                            <asp:LinkButton class="nav-link active btn btn-lg text-white" Visible="false" ID="LinkButton11" runat="server" href="relag.aspx"><h2></h2>Relatórios</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn  btn-lg text-white" href="regdia.aspx">
-                                <h2></h2>
-                                Registo Diário</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn  btn-lg text-white" href="tmar.aspx">
-                                <h2></h2>
-                                2Mares</a>
+                            <asp:LinkButton class="nav-link active btn btn-lg text-white" Visible="false" ID="LinkButton12" runat="server" href="rel.aspx"><h2></h2>Avaliadores</asp:LinkButton>
                         </li>
                     </ul>
-                </div>
+               </div>
+            </div>
+            <div class="collapse navbar-collapse p-3 mb-2" id="navbarNavDropdown2" style="background-color: #00008B">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <asp:LinkButton class="btn text-white" ID="LinkButton15" Visible="false" runat="server">Olá</asp:LinkButton>
+                    </li>
+                    <li class="nav-item">
+                        <asp:LinkButton class="nav-link btn btn-outline-dark text-white" OnClick="LinkButton8_Click" ID="LinkButton8" Visible="false" runat="server">Logout</asp:LinkButton>
+                    </li>
+                </ul>
             </div>
         </nav>
         <div>
@@ -58,6 +65,30 @@
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
             </asp:ContentPlaceHolder>
         </div>
+        <footer class="fixed-bottom">
+            <div id="footer1" class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                        <p>
+                            <asp:LinkButton class="footerlinks" ID="LinkButton10"  runat="server" href="admlog.aspx">Admin Login</asp:LinkButton>
+                            &nbsp;
+                            <asp:LinkButton class="footerlinks" Visible="false" ID="LinkButton7" runat="server">Registo Relatório</asp:LinkButton>
+                            &nbsp;
+                            <asp:LinkButton class="footerlinks" Visible="false" ID="LinkButton9" runat="server">Registo 2Mares</asp:LinkButton>
+                            &nbsp;
+                            <asp:LinkButton class="footerlinks" Visible="false" ID="LinkButton2" runat="server">Registo de Avaliadores</asp:LinkButton>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="footer2" class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                        <p style="color:whitesmoke">&copy All right Reserved. <a class="footerlinks" href="#" target="_blank">jalves-d</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </form>
 </body>
 </html>

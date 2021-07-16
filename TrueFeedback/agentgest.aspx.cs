@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace TrueFeedback
@@ -39,6 +41,34 @@ namespace TrueFeedback
         protected void Button4_Click(object sender, EventArgs e)
         {
             delAgent();
+        }
+        protected void Download(object sender, EventArgs e)
+        {
+            GridView1.AllowPaging = false;
+            GridView1.DataBind();
+            PrintGrid();
+            GridView1.AllowPaging = true;
+        }
+        void PrintGrid()
+        {
+            HtmlForm form = new HtmlForm();
+            Response.ClearContent();
+            Response.AddHeader("content-disposition", string.Format("attachment; filename=Registos.html"));
+            Response.Charset = "";
+            Response.ContentType = "text/html";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            form.Attributes["runat"] = "server";
+            newtest.Visible = true;
+            form.Controls.Add(Header);
+            form.Controls.Add(newtest);
+            form.Controls.Add(GridView1);
+            this.Controls.Add(form);
+            Form.RenderControl(htw);
+            Response.Write(sw.ToString());
+            Response.Flush();
+            Response.End();
+            newtest.Visible = false;
         }
         bool checkAgent()
         {
@@ -82,9 +112,11 @@ namespace TrueFeedback
                     feedb.Open();
                 }
 
-                SqlCommand cmd = new SqlCommand("UPDATE master_agent_tbl SET name=@name,consola=@consola,email=@email,contacto=@contacto,equipa=@equipa WHERE tp='" + TextBox1.Text.Trim() + "'", feedb);
+                SqlCommand cmd = new SqlCommand("UPDATE master_agent_tbl SET name=@name,nif=@nif,password=@password,consola=@consola,email=@email,contacto=@contacto,equipa=@equipa WHERE tp='" + TextBox1.Text.Trim() + "'", feedb);
 
                 cmd.Parameters.AddWithValue("@name", TextBox2.Text.Trim());
+                cmd.Parameters.AddWithValue("@nif", TextBox9.Text.Trim());
+                cmd.Parameters.AddWithValue("@password", TextBox8.Text.Trim());
                 cmd.Parameters.AddWithValue("@consola", TextBox7.Text.Trim());
                 cmd.Parameters.AddWithValue("@email", TextBox4.Text.Trim());
                 cmd.Parameters.AddWithValue("@contacto", TextBox3.Text.Trim());
@@ -193,8 +225,10 @@ namespace TrueFeedback
                 {
                     feedb.Open();
                 }
-                SqlCommand cmd = new SqlCommand("INSERT INTO master_agent_tbl(tp,name,consola,email,contacto,equipa) values(@tp,@name,@consola,@email,@contacto,@equipa)", feedb);
+                SqlCommand cmd = new SqlCommand("INSERT INTO master_agent_tbl(tp,name,nif,password,consola,email,contacto,equipa) values(@tp,@name,@nif,@password,@consola,@email,@contacto,@equipa)", feedb);
                 cmd.Parameters.AddWithValue("@tp", TextBox1.Text.Trim());
+                cmd.Parameters.AddWithValue("@nif", TextBox9.Text.Trim());
+                cmd.Parameters.AddWithValue("@password", TextBox8.Text.Trim());
                 cmd.Parameters.AddWithValue("@name", TextBox2.Text.Trim());
                 cmd.Parameters.AddWithValue("@consola", TextBox7.Text.Trim());
                 cmd.Parameters.AddWithValue("@email", TextBox4.Text.Trim());

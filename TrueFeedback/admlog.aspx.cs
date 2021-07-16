@@ -10,14 +10,13 @@ using System.Web.UI.WebControls;
 
 namespace TrueFeedback
 {
-    public partial class HomeLogin : System.Web.UI.Page
+    public partial class admlog : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["feedb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
 
         }
-
         protected void Button1_Click(object sender, EventArgs e)
         {
             try
@@ -26,10 +25,8 @@ namespace TrueFeedback
                 if (con.State == ConnectionState.Closed)
                 {
                     con.Open();
-
                 }
-                var table = DropDownList1.SelectedValue.Equals("Agente") ? "master_agent_tbl" : "master_ava_tbl";
-                SqlCommand cmd = new SqlCommand("select * from " + table + " where tp='" + TextBox1.Text.Trim() + "' AND password='" + TextBox2.Text.Trim() + "'", con);
+                SqlCommand cmd = new SqlCommand("select * from master_admin_tbl where tp='" + TextBox1.Text.Trim() + "' AND password='" + TextBox2.Text.Trim() + "'", con);
                 SqlDataReader dr = cmd.ExecuteReader();
                 if (dr.HasRows)
                 {
@@ -37,8 +34,7 @@ namespace TrueFeedback
                     {
                         Response.Write("<script>alert('Login realizado com sucesso !');</script>");
                         Session["tp"] = dr.GetValue(0).ToString();
-                        Session["role"] = DropDownList1.SelectedValue;
-                        Session["name"] = dr.GetValue(2).ToString();
+                        Session["role"] = "admin";
                         //Session["status"] = dr.GetValue(10).ToString();
                     }
                     Response.Redirect("mongest.aspx");
@@ -47,7 +43,6 @@ namespace TrueFeedback
                 {
                     Response.Write("<script>alert('Credenciais Inválidas');</script>");
                 }
-
             }
             catch (Exception ex)
             {
