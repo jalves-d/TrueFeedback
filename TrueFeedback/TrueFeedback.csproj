@@ -263,6 +263,7 @@
     <Content Include="avagest.aspx" />
     <Content Include="css\StyleSheet1.css" />
     <Content Include="css\StyleSheet2.css" />
+    <Content Include="css\StyleSheet3.css" />
     <Content Include="feedbackcgest.aspx" />
     <Content Include="HomeLogin.aspx" />
     <Content Include="img\2mares-speech-analitycs.png" />

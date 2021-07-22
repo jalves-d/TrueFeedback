@@ -3,9 +3,11 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using Newtonsoft.Json;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Globalization;
 
 namespace TrueFeedback
 {
@@ -14,9 +16,9 @@ namespace TrueFeedback
         string strcon = ConfigurationManager.ConnectionStrings["feedb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-            GridView1.DataBind();
         }
-        void CalculateMonthTMO()
+        
+        public string CalculateMonthTMO()
         {
             var t = new string[]{
                 (!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""),
@@ -42,24 +44,29 @@ namespace TrueFeedback
                     contmo[(Int32.Parse(row["month"].ToString())) - 1] += Int32.Parse(row["temp_dia"].ToString());
                     contotalcalls[(Int32.Parse(row["month"].ToString())) - 1] += Int32.Parse(row["total_calls"].ToString());
                 }
-                for (int i = 0; i < 12; i++)
+                for (int i = 12; i > 0; i--)
                 {
                     contmo[i] /= contotalcalls[i];
                 }
+                int[] testet = new int[]{1, 2, 3, 4, 5};
+                foreach int i in 
+                return JsonConvert.SerializeObject(testet);
             }
             catch (Exception ex)
             {
                 Response.Write("<script>alert('" + ex.Message + "');</script>");
-            }
-
+            }*/
+            int[] teste = new int[] { 1, 2, 3, 4, 5 };
+            CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(1);
+            return "[1, 2, 3, 4, 5, 6]";
         }
-        void ChartsByMonth()
+        void ChartsbyWeeks()
         {
-
+            //Serão mostrados as ultimas 12 semanas
         }
-        void ChartsByDay()
+        void ChartsbyDays()
         {
-
+            //Serão mostrados os ultimos 12 dias; 
         }
     }
 }

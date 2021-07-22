@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -47,7 +48,6 @@ namespace TrueFeedback
                 {
                     Response.Write("<script>alert('Credenciais Inválidas');</script>");
                 }
-
             }
             catch (Exception ex)
             {
