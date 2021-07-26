@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                             <div class="col-md-1">
-                                <asp:Button class="btn btn-block btn-sucess btn-primary text-white" Style="background-color: #00008B" ID="Button1" runat="server" Text="Relatório" BorderColor="White" />
+                                <asp:Button class="btn btn-block btn-sucess btn-primary text-white" Style="background-color: #00008B" OnClick="Button1Click" ID="Button1" runat="server" Text="Relatório" BorderColor="White" />
                             </div>
                             <div class="col-md-1">
                                 <asp:Button class="btn btn-block btn-sucess btn-primary text-white" Style="background-color: #00008B" ID="Button2" runat="server" Text="Evolução Mês" BorderColor="White" />
@@ -177,15 +177,15 @@
             </div>
              <div class="col-md-6">
                     <div class="row">
-                        <div class="col-md-3">
-                            <div class="chart-container" style="position: fixed; height:10vh; width:12vw";>
-                            <canvas id="myChart" width="100" height="200"></canvas>
+                        <div class="col-md-12">
+                            <div class="chart-container" style="position: relative; height:35vh; width:20vw";>
+                            <canvas id="myChart" width="200" height="150"></canvas>
                             <script>
                                 var ctx = document.getElementById('myChart');
                                 var myChart = new Chart(ctx, {
                                     type: 'bar',
                                     data: {
-                                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                                        labels: <%=MonthtoLabels()%>,
                                         datasets: [{
                                             label: 'TMO',
                                             data: <%=CalculateMonthTMO()%>,
@@ -219,55 +219,56 @@
                             </script>
                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="chart-container" style="position: fixed; height:10vh; width:12vw";>
-                            <canvas id="myChartT" width="100" height="200"></canvas>
+                  <div class="row">
+                            <div class="col-md-12">
+                            <div class="chart-container" style="position: relative; height:35vh; width:45vw";>
+                            <canvas id="myChartT" width="400" height="145"></canvas>
                             <script>
                                 var ctx = document.getElementById('myChartT');
+                                const data = <%=TesteFunc()%>;
                                 var myChartT = new Chart(ctx, {
-                                    type: 'pie',
+                                    type: 'bar',
                                     data: {
-                                        labels: [
-                                            'Callbacks Improcedentes',
-                                            'Transferências Incorretas',
-                                            'Gestões Corretas'
-                                        ],
+                                        labels: ['Jan', 'Feb'],
                                         datasets: [{
-                                            label: 'My First Dataset',
-                                            data: [300, 50, 100],
-                                            backgroundColor: [
-                                                'rgb(255, 0, 0)',
-                                                'rgb(54, 162, 235)',
-                                                'rgb(255, 205, 86)'
-                                            ],
-                                            hoverOffset: 4
-                                        }]
-                                    }
+                                            label: 'Gestões Corretas',
+                                            data: data,
+                                            backgroundColor: ['rgba(255, 0, 0)'],
+                                            borderWidth: 1,
+                                            parsing: {
+                                                yAxisKey: 'gc'
+                                            }
+                                        }, {
+                                            label: 'Transferências Improcedentes',
+                                            data: data,
+                                            backgroundColor: ['rgba(250, 250, 0)'],
+                                            borderWidth: 1,
+                                            parsing: {
+                                                yAxisKey: 'tim'
+                                            }
+                                        }, {
+                                            label: 'Callbacks Improcedentes',
+                                            data: data,
+                                            backgroundColor: ['rgba(0, 255, 0)'],
+                                            borderWidth: 1,
+                                            parsing: {
+                                                yAxisKey: 'cbi'
+                                            }
+                                        }, {
+                                            label: 'Transferência Vendas',
+                                            data: data,
+                                            backgroundColor: ['rgba(0, 0, 255)'],
+                                            borderWidth: 1,
+                                            parsing: {
+                                                yAxisKey: 'trv'
+                                            }
+                                        }],
+                                    },
                                 });
                             </script>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="chart-container" style="position: fixed; height:10vh; width:12vw";>
-                            <canvas id="myChartTr" width="300" height="200"></canvas>
-                            <script>
-                                var ctx = document.getElementById('myChartTr');
-                                var myChartT = new Chart(ctx, {
-                                    type: 'line',
-                                    data: {
-                                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
-                                        datasets: [{
-                                            label: 'My First Dataset',
-                                            data: [65, 59, 80, 81, 56, 55, 40],
-                                            borderColor: 'rgb(75, 192, 192)',
-                                            fill: false,
-                                            tension: 0.1
-                                        }]
-                                    }
-                                });
-                            </script>
-                          </div>
-                      </div>
+                 </div>
                  </div>
             </div>
         </div>
