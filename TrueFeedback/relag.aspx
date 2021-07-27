@@ -182,6 +182,7 @@
                             <canvas id="myChart" width="200" height="150"></canvas>
                             <script>
                                 var ctx = document.getElementById('myChart');
+
                                 var myChart = new Chart(ctx, {
                                     type: 'bar',
                                     data: {

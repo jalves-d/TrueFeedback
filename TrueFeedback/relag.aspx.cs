@@ -20,7 +20,7 @@ namespace TrueFeedback
         }
         public void Button1Click(object sender, EventArgs e)
         {
-            CalculateDays();
+            CalculateDaysTMO();
         }
         public string MonthtoLabels()
         {
@@ -38,55 +38,7 @@ namespace TrueFeedback
             }
             return datas + "]";
         }
-        public string CalculateMonthTMO()
-        {
-            var t = new string[]{
-                (!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""),
-                (!string.IsNullOrEmpty(TextBox2.Text) ? $"nif = '{TextBox2.Text}'" : ""),
-                }.Where((e) => { return !string.IsNullOrEmpty(e); });
 
-            var ony = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
-            var queryQuery = string.Join(" AND ", t);
-            try
-            {
-                SqlConnection feedb = new SqlConnection(strcon);
-                if (feedb.State == ConnectionState.Closed)
-                {
-                    feedb.Open();
-                }
-                SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
-                    "TrueFeedback.dbo.master_regdia_tbl WHERE " +
-                    "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '"+ ony.ToString("yyyy/MM/d") + "'" +
-                    "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
-                SqlDataAdapter mydb = new SqlDataAdapter(cmd);
-                DataTable dbtbl = new DataTable();
-                mydb.Fill(dbtbl);
-                int[] contmo = new int[12] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                int[] contotalcalls = new int[12] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                int s;
-                foreach (DataRow row in dbtbl.Rows)
-                {
-                    if (int.TryParse(row["dia"].ToString().Substring(1, 1), out _))
-                        s = 2;
-                    else
-                        s = 1;
-                    contmo[(Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["temp_dia"].ToString());
-                    contotalcalls[(Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["total_calls"].ToString());
-                }
-                int i = 0;
-                while (i < 12)
-                {
-                    if(contmo[i] != 0)
-                        contmo[i] = contmo[i] / contotalcalls[i];
-                    i++;
-                }
-                return "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13]";
-            }
-            catch (Exception ex)
-            {
-                return "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]";
-            }
-        }
         public string TesteFunc()
         {            
             int[] contmon = new int[12];
@@ -94,6 +46,7 @@ namespace TrueFeedback
             int[] tim = new int[12];
             int[] cbi = new int[12];
             int[] trv = new int[12];
+            int[,] teste = new int[5, 12];
             string chartdata = "[";
             int j = DateTime.Now.Month;
 
@@ -111,8 +64,15 @@ namespace TrueFeedback
                 else
                     chartdata += "{ x : '" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(contmon[i]).Substring(0, 3) + "', gc: " + gcvar[i] + ", tim: " + tim[i] + ", cbi: " + cbi[i] + ", trv: " + trv[i] + " }]";
             }
-            //return querry;
-
+            for (int i = 0; i < 12; i++)
+            {
+                teste[0, i] = contmon[i];
+                teste[1, i] = gcvar[i];
+                teste[2, i] = tim[i];
+                teste[3, i] = cbi[i];
+                teste[4, i] = trv[i];
+            }
+            
             return "[{ x: 'Jan', gc: 100, tim: 50, cbi: 50, trv: 100 }, { x: 'Feb', gc: 120, tim: 55, cbi: 75, trv: 100 }, " +
                 "{ x: 'Mar', gc: 120, tim: 55, cbi: 75, trv: 100 }, { x: 'Abr', gc: 120, tim: 55, cbi: 75, trv: 100 }," +
                 "{ x: 'Mai', gc: 120, tim: 55, cbi: 75, trv: 100 }, { x: 'Jun', gc: 120, tim: 55, cbi: 75, trv: 100 }," +
@@ -120,7 +80,9 @@ namespace TrueFeedback
                 "{ x: 'Set', gc: 120, tim: 55, cbi: 75, trv: 100 }, { x: 'Out', gc: 120, tim: 55, cbi: 75, trv: 100 }," +
                 "{ x: 'Nov', gc: 120, tim: 55, cbi: 75, trv: 100 }, { x: 'Dez', gc: 120, tim: 55, cbi: 75, trv: 100 }]";
         }
-        public void CalculateWeeks()
+
+        //TMO CHARTS
+        public string CalculateMonthTMO()
         {
             var t = new string[]{
                 (!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""),
@@ -129,65 +91,106 @@ namespace TrueFeedback
 
             var ony = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
             var queryQuery = string.Join(" AND ", t);
-            try
+            SqlConnection feedb = new SqlConnection(strcon);
+            if (feedb.State == ConnectionState.Closed)
             {
-                SqlConnection feedb = new SqlConnection(strcon);
-                if (feedb.State == ConnectionState.Closed)
+                feedb.Open();
+            }
+            SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
+                "TrueFeedback.dbo.master_regdia_tbl WHERE " +
+                "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
+                "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
+            SqlDataAdapter mydb = new SqlDataAdapter(cmd);
+            DataTable dbtbl = new DataTable();
+            mydb.Fill(dbtbl);
+            int[] contmo = new int[12] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            int[] contotalcalls = new int[12] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            int s;
+            foreach (DataRow row in dbtbl.Rows)
+            {
+                if (int.TryParse(row["dia"].ToString().Substring(1, 1), out _))
+                    s = 2;
+                else
+                    s = 1;
+                contmo[(Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["temp_dia"].ToString());
+                contotalcalls[(Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["total_calls"].ToString());
+            }
+            int i = 0;
+            while (i < 12)
+            {
+                if (contmo[i] != 0)
+                    contmo[i] = contmo[i] / contotalcalls[i];
+                i++;
+            }
+            return "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13]";
+        }
+        public void CalculateWeeksTMO()
+        {
+            var t = new string[]{
+                (!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""),
+                (!string.IsNullOrEmpty(TextBox2.Text) ? $"nif = '{TextBox2.Text}'" : ""),
+                }.Where((e) => { return !string.IsNullOrEmpty(e); });
+
+            var ony = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
+            var queryQuery = string.Join(" AND ", t);
+            SqlConnection feedb = new SqlConnection(strcon);
+            if (feedb.State == ConnectionState.Closed)
+            {
+                feedb.Open();
+            }
+            SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
+                "TrueFeedback.dbo.master_regdia_tbl WHERE " +
+                "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
+                "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
+            SqlDataAdapter mydb = new SqlDataAdapter(cmd);
+            DataTable dbtbl = new DataTable();
+            mydb.Fill(dbtbl);
+            DateTimeFormatInfo dfi = DateTimeFormatInfo.CurrentInfo;
+            System.Globalization.Calendar cal = dfi.Calendar;
+            var hoje = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            var contweek = new int[12];
+            var conttmo = new int[12];
+            var conttotalcalls = new int[12];
+            int contweekread = 0;
+            int lastweekread = cal.GetWeekOfYear(hoje, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+            DateTime dia;
+            int s = 2;
+            int i = 0;
+            foreach (DataRow row in dbtbl.Rows)
+            {
+                if (Int32.TryParse(row["dia"].ToString().Substring(1, 1), out _))
+                    s = 2;
+                else
+                    s = 1;
+                dia = new DateTime(Int32.Parse(row["dia"].ToString().Substring(4+s, 4)), Int32.Parse(row["dia"].ToString().Substring(0, s)), 
+                    Int32.Parse(row["dia"].ToString().Substring(1 + s, 2)));
+                if (lastweekread != cal.GetWeekOfYear(dia, dfi.CalendarWeekRule, dfi.FirstDayOfWeek))
+                    contweekread++;
+                if (contweekread < 12)
                 {
-                    feedb.Open();
+                    contweek[contweekread] = cal.GetWeekOfYear(dia, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+                    conttmo[contweekread] += Int32.Parse(row["temp_dia"].ToString());
+                    conttotalcalls[contweekread] += Int32.Parse(row["total_calls"].ToString());
+                    lastweekread = cal.GetWeekOfYear(dia, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
                 }
-                SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
-                    "TrueFeedback.dbo.master_regdia_tbl WHERE " +
-                    "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
-                    "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
-                SqlDataAdapter mydb = new SqlDataAdapter(cmd);
-                DataTable dbtbl = new DataTable();
-                mydb.Fill(dbtbl);
-                DateTimeFormatInfo dfi = DateTimeFormatInfo.CurrentInfo;
-                System.Globalization.Calendar cal = dfi.Calendar;
-                var hoje = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-                var contweek = new int[12];
-                var conttmo = new int[12];
-                var conttotalcalls = new int[12];
-                int contweekread = 0;
-                int lastweekread = cal.GetWeekOfYear(hoje, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
-                DateTime dia;
-                int s = 2;
-                foreach (DataRow row in dbtbl.Rows)
+                else
                 {
-                    if (int.TryParse(row["dia"].ToString().Substring(1, 1), out _))
-                        s = 2;
-                    else
-                        s = 1;
-                    dia = new DateTime(Int32.Parse(row["dia"].ToString().Substring(4+s, 4)), Int32.Parse(row["dia"].ToString().Substring(0, s)), 
-                        Int32.Parse(row["dia"].ToString().Substring(1 + s, 2)));
-                    if (lastweekread != cal.GetWeekOfYear(dia, dfi.CalendarWeekRule, dfi.FirstDayOfWeek))
-                        contweekread++;
-                    if (contweekread < 12)
+                    while (i < 12)
                     {
-                        contweek[contweekread] = cal.GetWeekOfYear(dia, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
-                        conttmo[contweekread] += Int32.Parse(row["temp_dia"].ToString());
-                        conttotalcalls[contweekread] += Int32.Parse(row["total_calls"].ToString());
-                        lastweekread = cal.GetWeekOfYear(dia, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
-                    }
-                    else
-                    {
-                        int i = 0;
-                        while (i < 12)
-                        {
-                            if (conttmo[i] != 0)
-                                conttmo[i] = conttmo[i] / conttotalcalls[i];
-                            i++;
-                        }
+                        if (conttmo[i] != 0)
+                            conttmo[i] = conttmo[i] / conttotalcalls[i];
+                        i++;
                     }
                 }
             }
-            catch (Exception ex)
+            while (i < 12)
             {
-                
+                if (conttmo[i] != 0)
+                    conttmo[i] = conttmo[i] / conttotalcalls[i];
+                i++;
             }
         }
-        public void CalculateDays()
+        public string CalculateDaysTMO()
         {
             var t = new string[]{
                 (!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""),
@@ -196,55 +199,52 @@ namespace TrueFeedback
 
             var ony = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
             var queryQuery = string.Join(" AND ", t);
-            try
+            SqlConnection feedb = new SqlConnection(strcon);
+            if (feedb.State == ConnectionState.Closed)
             {
-                SqlConnection feedb = new SqlConnection(strcon);
-                if (feedb.State == ConnectionState.Closed)
-                {
-                    feedb.Open();
-                }
-                SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
-                    "TrueFeedback.dbo.master_regdia_tbl WHERE " +
-                    "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
-                    "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
-                SqlDataAdapter mydb = new SqlDataAdapter(cmd);
-                DataTable dbtbl = new DataTable();
-                mydb.Fill(dbtbl);
-                string tmoret = "[";
-                int contdaysread = 0;
-                DateTime lastday = DateTime.Now;
-                int s;
-                foreach (DataRow row in dbtbl.Rows)
-                {
-                    if (int.TryParse(row["dia"].ToString().Substring(1, 1), out _))
-                        s = 2;
-                    else
-                        s = 1;
-                    if (contdaysread != 0)
-                    {
-                        if (lastday != new DateTime(Int32.Parse(row["dia"].ToString().Substring(4 + s, 4)), Int32.Parse(row["dia"].ToString().Substring(0, s)),
-                        Int32.Parse(row["dia"].ToString().Substring(1 + s, 2))))
-                            contdaysread++;
-                    }
-                    else
-                    {
-                        lastday = new DateTime(Int32.Parse(row["dia"].ToString().Substring(4 + s, 4)), Int32.Parse(row["dia"].ToString().Substring(0, s)), 
-                            Int32.Parse(row["dia"].ToString().Substring(1 + s, 2)));
-                    }
-                    if (contdaysread < 11)
-                        tmoret = tmoret + row["dia"].ToString() + row["temp_dia"].ToString() + row["total_calls"].ToString() + "\n";
-                    else
-                    {
-                        tmoret = tmoret + row["dia"].ToString() + row["temp_dia"].ToString() + row["total_calls"].ToString() + "]";
-                        //return tmoret;
-                    }
-                    
-                }
+                feedb.Open();
             }
-            catch (Exception ex)
+            SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
+                "TrueFeedback.dbo.master_regdia_tbl WHERE " +
+                "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
+                "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
+            SqlDataAdapter mydb = new SqlDataAdapter(cmd);
+            DataTable dbtbl = new DataTable();
+            mydb.Fill(dbtbl);
+            string tmoret = "[";
+            int contdaysread = 0;
+            DateTime lastday = DateTime.Now;
+            var conttmo = new int[12];
+            var contcalls = new int[12];
+            int s;
+            foreach (DataRow row in dbtbl.Rows)
             {
-
+                if (Int32.TryParse(row["dia"].ToString().Substring(1, 1), out _))
+                    s = 2;
+                else
+                    s = 1;
+                if (contdaysread != 0)
+                {
+                    if (lastday != new DateTime(Int32.Parse(row["dia"].ToString().Substring(4 + s, 4)), Int32.Parse(row["dia"].ToString().Substring(0, s)),
+                    Int32.Parse(row["dia"].ToString().Substring(1 + s, 2))))
+                    {
+                            
+                        contdaysread++;
+                        if (contdaysread != 12)
+                            tmoret += (conttmo[contdaysread - 1] / contcalls[contdaysread - 1]).ToString() + ",";
+                        else
+                            return tmoret + (conttmo[contdaysread - 1] / contcalls[contdaysread - 1]).ToString() + "]";
+                    }
+                }
+                else
+                {
+                    lastday = new DateTime(Int32.Parse(row["dia"].ToString().Substring(4 + s, 4)), Int32.Parse(row["dia"].ToString().Substring(0, s)), 
+                        Int32.Parse(row["dia"].ToString().Substring(1 + s, 2)));
+                }
+                conttmo[contdaysread] += Int32.Parse(row["temp_dia"].ToString());
+                contcalls[contdaysread] += Int32.Parse(row["total_calls"].ToString());
             }
+            return tmoret + (conttmo[contdaysread] / contcalls[contdaysread]).ToString() + "]";
         }
         /*
         public void CalculateMonthGest()
@@ -291,13 +291,5 @@ namespace TrueFeedback
                 return "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]";
             }
         }*/
-        void ChartsbyWeeks()
-        {
-            //Serão mostrados as ultimas 12 semanas
-        }
-        void ChartsbyDays()
-        {
-            //Serão mostrados os ultimos 12 dias; 
-        }
     }
 }

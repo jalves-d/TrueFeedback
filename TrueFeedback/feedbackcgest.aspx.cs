@@ -31,6 +31,7 @@ namespace TrueFeedback
                 TextBox1.Text = Session["tp"].ToString();
                 TextBox1.ReadOnly = true;
                 TextBox2.Text = Session["name"].ToString();
+                SqlDataSource1.SelectCommand = $"SELECT tp,name,tp_agent,dados_contrato,tp_avaliador,day,month,year,observ,meio_comun,tipologia FROM TrueFeedback.dbo.master_feedback_tbl,TrueFeedback.dbo.master_agent_tbl WHERE TrueFeedback.dbo.master_agent_tbl.tp = TrueFeedback.dbo.master_feedback_tbl.tp_agent AND TrueFeedback.dbo.master_feedback_tbl.tp_agent = '"+ Session["tp"].ToString() +"'";
             }
         }
         protected void Button1_Click(object sender, EventArgs e)
@@ -158,7 +159,6 @@ namespace TrueFeedback
                 {
                     Response.Write("<script>alert('Dados Inválidos !');</script>");
                 }
-
             }
             catch (Exception ex)
             {
