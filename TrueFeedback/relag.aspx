@@ -226,7 +226,7 @@
                             <canvas id="myChartT" width="400" height="145"></canvas>
                             <script>
                                 var ctx = document.getElementById('myChartT');
-                                const data = <%=TesteFunc()%>;
+                                const data = <%=SecChartMonth()%>;
                                 var myChartT = new Chart(ctx, {
                                     type: 'bar',
                                     data: {

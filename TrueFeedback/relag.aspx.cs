@@ -39,14 +39,67 @@ namespace TrueFeedback
             return datas + "]";
         }
 
-        public string TesteFunc()
+        // ERROR RATE CHARTS
+        public int[,] LabelsSecByMonth()
+        {
+            var t = new string[]{
+                (!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""),
+                (!string.IsNullOrEmpty(TextBox2.Text) ? $"nif = '{TextBox2.Text}'" : ""),
+                }.Where((e) => { return !string.IsNullOrEmpty(e); });
+            int[,] teste = new int[4, 12];
+            var ony = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
+            var queryQuery = string.Join(" AND ", t);
+            SqlConnection feedb = new SqlConnection(strcon);
+            if (feedb.State == ConnectionState.Closed)
+            {
+                feedb.Open();
+            }
+            SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
+                "TrueFeedback.dbo.master_regdia_tbl WHERE " +
+                "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
+                "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
+            SqlDataAdapter mydb = new SqlDataAdapter(cmd);
+            DataTable dbtbl = new DataTable();
+            mydb.Fill(dbtbl);
+            int s;
+            int contmonthsread = 0;
+            int lastmonth = 0;
+            foreach (DataRow row in dbtbl.Rows)
+            {
+                if (int.TryParse(row["dia"].ToString().Substring(1, 1), out _))
+                    s = 2;
+                else
+                    s = 1;
+                if (lastmonth == 0)
+                    lastmonth = Int32.Parse(row["dia"].ToString().Substring(0, s));
+                if (lastmonth != Int32.Parse(row["dia"].ToString().Substring(0, s)))
+                    contmonthsread++;
+                if (contmonthsread < 12)
+                {
+                    teste[0, (Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += (Int32.Parse(row["num_gest"].ToString()) - Int32.Parse(row["tr_imp"].ToString()) - Int32.Parse(row["cb_imp"].ToString()));
+                    teste[1, (Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["tr_imp"].ToString());
+                    teste[2, (Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["cb_imp"].ToString());
+                    teste[3, (Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["tr_vend"].ToString());
+                }
+                else
+                    return teste;
+            }
+            contmonthsread++;
+            while(contmonthsread < 12)
+            {
+                teste[0, contmonthsread] = 0;
+                teste[1, contmonthsread] = 0;
+                teste[2, contmonthsread] = 0;
+                teste[3, contmonthsread] = 0;
+                contmonthsread++;
+            }
+            return teste;
+        }
+
+        public string SecChartMonth()
         {            
             int[] contmon = new int[12];
-            int[] gcvar = new int[12];
-            int[] tim = new int[12];
-            int[] cbi = new int[12];
-            int[] trv = new int[12];
-            int[,] teste = new int[5, 12];
+            int[,] label = new int[4, 12];
             string chartdata = "[";
             int j = DateTime.Now.Month;
 
@@ -57,28 +110,15 @@ namespace TrueFeedback
                 contmon[i] = j;
                 j--;
             }
-            for (int i = 11; i != 0; i--) 
+            label = LabelsSecByMonth();
+            for (int i = 11; i >= 0; i--) 
             {
-                if (i != 1)
-                    chartdata += "{ x : '" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(contmon[i]).Substring(0, 3) + "', gc: "+ gcvar[i] +", tim: " + tim[i] + ", cbi: " + cbi[i] + ", trv: " + trv[i] + " },";
+                if (i != 0)
+                    chartdata += "{ x : '" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(contmon[i]).Substring(0, 3) + "', gc: "+ label[0, i].ToString() +", tim: " + label[1, i].ToString() + ", cbi: " + label[2,i].ToString() + ", trv: " + label[3, i].ToString() + " },";
                 else
-                    chartdata += "{ x : '" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(contmon[i]).Substring(0, 3) + "', gc: " + gcvar[i] + ", tim: " + tim[i] + ", cbi: " + cbi[i] + ", trv: " + trv[i] + " }]";
+                    chartdata += "{ x : '" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(contmon[i]).Substring(0, 3) + "', gc: " + label[0, i].ToString() + ", tim: " + label[1, i].ToString() + ", cbi: " + label[2, i].ToString() + ", trv: " + label[3, i].ToString() + " }]";
             }
-            for (int i = 0; i < 12; i++)
-            {
-                teste[0, i] = contmon[i];
-                teste[1, i] = gcvar[i];
-                teste[2, i] = tim[i];
-                teste[3, i] = cbi[i];
-                teste[4, i] = trv[i];
-            }
-            
-            return "[{ x: 'Jan', gc: 100, tim: 50, cbi: 50, trv: 100 }, { x: 'Feb', gc: 120, tim: 55, cbi: 75, trv: 100 }, " +
-                "{ x: 'Mar', gc: 120, tim: 55, cbi: 75, trv: 100 }, { x: 'Abr', gc: 120, tim: 55, cbi: 75, trv: 100 }," +
-                "{ x: 'Mai', gc: 120, tim: 55, cbi: 75, trv: 100 }, { x: 'Jun', gc: 120, tim: 55, cbi: 75, trv: 100 }," +
-                "{ x: 'Jul', gc: 120, tim: 55, cbi: 75, trv: 100 }, { x: 'Ago', gc: 120, tim: 55, cbi: 75, trv: 100 }," +
-                "{ x: 'Set', gc: 120, tim: 55, cbi: 75, trv: 100 }, { x: 'Out', gc: 120, tim: 55, cbi: 75, trv: 100 }," +
-                "{ x: 'Nov', gc: 120, tim: 55, cbi: 75, trv: 100 }, { x: 'Dez', gc: 120, tim: 55, cbi: 75, trv: 100 }]";
+            return chartdata;
         }
 
         //TMO CHARTS
@@ -244,7 +284,11 @@ namespace TrueFeedback
                 conttmo[contdaysread] += Int32.Parse(row["temp_dia"].ToString());
                 contcalls[contdaysread] += Int32.Parse(row["total_calls"].ToString());
             }
-            return tmoret + (conttmo[contdaysread] / contcalls[contdaysread]).ToString() + "]";
+            while (contdaysread < 11)
+            {
+                tmoret += (0).ToString() + ",";
+            }
+            return tmoret + (0).ToString() + "]";
         }
         /*
         public void CalculateMonthGest()
