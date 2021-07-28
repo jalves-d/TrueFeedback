@@ -121,6 +121,130 @@ namespace TrueFeedback
             return chartdata;
         }
 
+        public int[,] LabelsSecByWeek()
+        {
+            var t = new string[]{
+                (!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""),
+                (!string.IsNullOrEmpty(TextBox2.Text) ? $"nif = '{TextBox2.Text}'" : ""),
+                }.Where((e) => { return !string.IsNullOrEmpty(e); });
+            int[,] labels = new int[5, 12];
+            var ony = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
+            var queryQuery = string.Join(" AND ", t);
+            SqlConnection feedb = new SqlConnection(strcon);
+            if (feedb.State == ConnectionState.Closed)
+            {
+                feedb.Open();
+            }
+            SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
+                "TrueFeedback.dbo.master_regdia_tbl WHERE " +
+                "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
+                "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
+            SqlDataAdapter mydb = new SqlDataAdapter(cmd);
+            DataTable dbtbl = new DataTable();
+            mydb.Fill(dbtbl);
+            DateTimeFormatInfo dfi = DateTimeFormatInfo.CurrentInfo;
+            System.Globalization.Calendar cal = dfi.Calendar;
+            var hoje = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            int contweekread = 0;
+            int lastweekread = cal.GetWeekOfYear(hoje, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+            DateTime dia;
+            int s = 2;
+            foreach (DataRow row in dbtbl.Rows)
+            {
+                if (Int32.TryParse(row["dia"].ToString().Substring(1, 1), out _))
+                    s = 2;
+                else
+                    s = 1;
+                dia = new DateTime(Int32.Parse(row["dia"].ToString().Substring(4 + s, 4)), Int32.Parse(row["dia"].ToString().Substring(0, s)),
+                    Int32.Parse(row["dia"].ToString().Substring(1 + s, 2)));
+                if (lastweekread != cal.GetWeekOfYear(dia, dfi.CalendarWeekRule, dfi.FirstDayOfWeek))
+                    contweekread++;
+                if (contweekread < 12)
+                {
+                    labels[0, contweekread] = cal.GetWeekOfYear(dia, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+                    labels[1, contweekread] += (Int32.Parse(row["num_gest"].ToString()) - Int32.Parse(row["tr_imp"].ToString()) - Int32.Parse(row["cb_imp"].ToString()));
+                    labels[2, contweekread] += Int32.Parse(row["tr_imp"].ToString());
+                    labels[3, contweekread] += Int32.Parse(row["cb_imp"].ToString());
+                    labels[4, contweekread] += Int32.Parse(row["tr_vend"].ToString());
+                    lastweekread = cal.GetWeekOfYear(dia, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+                }
+                else
+                    return labels;
+            }
+            int weeknumber = labels[0, contweekread];
+            contweekread++;
+            while (contweekread < 12)
+            {
+                labels[0, contweekread] = --weeknumber;
+                labels[1, contweekread] = 0;
+                labels[2, contweekread] = 0;
+                labels[3, contweekread] = 0;
+                labels[3, contweekread] = 0;
+                contweekread++;
+            }
+            return labels;
+        }
+        public string LabelsSecByDay()
+        {
+            var t = new string[]{
+                (!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""),
+                (!string.IsNullOrEmpty(TextBox2.Text) ? $"nif = '{TextBox2.Text}'" : ""),
+                }.Where((e) => { return !string.IsNullOrEmpty(e); });
+
+            var ony = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
+            var queryQuery = string.Join(" AND ", t);
+            SqlConnection feedb = new SqlConnection(strcon);
+            if (feedb.State == ConnectionState.Closed)
+            {
+                feedb.Open();
+            }
+            SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
+                "TrueFeedback.dbo.master_regdia_tbl WHERE " +
+                "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
+                "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
+            SqlDataAdapter mydb = new SqlDataAdapter(cmd);
+            DataTable dbtbl = new DataTable();
+            mydb.Fill(dbtbl);
+            string tmoret = "[";
+            int contdaysread = 0;
+            DateTime lastday = DateTime.Now;
+            int[,] label = new int[4, 12];
+            int s;
+            foreach (DataRow row in dbtbl.Rows)
+            {
+                if (Int32.TryParse(row["dia"].ToString().Substring(1, 1), out _))
+                    s = 2;
+                else
+                    s = 1;
+                if (contdaysread != 0)
+                {
+                    if (lastday != new DateTime(Int32.Parse(row["dia"].ToString().Substring(4 + s, 4)), Int32.Parse(row["dia"].ToString().Substring(0, s)),
+                    Int32.Parse(row["dia"].ToString().Substring(1 + s, 2))))
+                    {
+                        tmoret += "{ x: '" + lastday.Day.ToString() + "/" + lastday.Month.ToString() + "', gc: " + label[0, contdaysread].ToString() + ", tim: " + label[1, contdaysread].ToString() + ", cbi: " + label[2, contdaysread].ToString() + ", trv: " + label[3, contdaysread].ToString() + " },";
+                        contdaysread++;
+                        if (contdaysread != 12)
+                            tmoret +=  ",";
+                        else
+                            return tmoret +  "]";
+                    }
+                }
+                else
+                {
+                    lastday = new DateTime(Int32.Parse(row["dia"].ToString().Substring(4 + s, 4)), Int32.Parse(row["dia"].ToString().Substring(0, s)),
+                        Int32.Parse(row["dia"].ToString().Substring(1 + s, 2)));
+                }
+                label[0, contdaysread] += (Int32.Parse(row["num_gest"].ToString()) - Int32.Parse(row["tr_imp"].ToString()) - Int32.Parse(row["cb_imp"].ToString()));
+                label[1, contdaysread] += Int32.Parse(row["tr_imp"].ToString());
+                label[2, contdaysread] += Int32.Parse(row["cb_imp"].ToString());
+                label[3, contdaysread] += Int32.Parse(row["tr_vend"].ToString());
+            }
+            while (contdaysread < 11)
+            {
+                tmoret += (0).ToString() + ",";
+            }
+            return tmoret + (0).ToString() + "]";
+        }
         //TMO CHARTS
         public string CalculateMonthTMO()
         {

@@ -234,7 +234,7 @@
                                         datasets: [{
                                             label: 'Gestões Corretas',
                                             data: data,
-                                            backgroundColor: ['rgba(255, 0, 0)'],
+                                            backgroundColor: ['rgba(0, 0, 255)'],
                                             borderWidth: 1,
                                             parsing: {
                                                 yAxisKey: 'gc'
@@ -250,7 +250,7 @@
                                         }, {
                                             label: 'Callbacks Improcedentes',
                                             data: data,
-                                            backgroundColor: ['rgba(0, 255, 0)'],
+                                            backgroundColor: ['rgba(255, 0, 0)'],
                                             borderWidth: 1,
                                             parsing: {
                                                 yAxisKey: 'cbi'
@@ -258,7 +258,7 @@
                                         }, {
                                             label: 'Transferência Vendas',
                                             data: data,
-                                            backgroundColor: ['rgba(0, 0, 255)'],
+                                            backgroundColor: ['rgba(0, 255, 0)'],
                                             borderWidth: 1,
                                             parsing: {
                                                 yAxisKey: 'trv'
