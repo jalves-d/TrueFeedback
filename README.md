@@ -17,3 +17,6 @@ Some of the features still to be implemented :
 - Issuance of reports generated from the data collected by the call system.
 
 I decided to develop this project due to my need to see applications of my learning in real world problems, if the application can be used in the future by the company, some changes will be made to the project.
+
+
+![tfimgreg](https://user-images.githubusercontent.com/79873488/127357975-af30ab36-1afd-40dd-ac34-9043921ccdcd.jpg)
