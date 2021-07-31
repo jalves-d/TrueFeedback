@@ -95,7 +95,6 @@ namespace TrueFeedback
             }
             return teste;
         }
-
         public string SecChartMonth()
         {            
             int[] contmon = new int[12];
@@ -171,11 +170,10 @@ namespace TrueFeedback
                 else
                     return labels;
             }
-            int weeknumber = labels[0, contweekread];
             contweekread++;
             while (contweekread < 12)
             {
-                labels[0, contweekread] = --weeknumber;
+                labels[0, contweekread] = 0;
                 labels[1, contweekread] = 0;
                 labels[2, contweekread] = 0;
                 labels[3, contweekread] = 0;
@@ -184,6 +182,22 @@ namespace TrueFeedback
             }
             return labels;
         }
+        public string SecChartWeek()
+        {
+            int[,] label = new int[5, 12];
+            string chartdata = "[";
+
+            label = LabelsSecByWeek();
+            for (int i = 0; i < 12; i++)
+            {
+                if (i != 0)
+                    chartdata += "{ x : '" + label[0, i].ToString() + "', gc: " + label[1, i].ToString() + ", tim: " + label[2, i].ToString() + ", cbi: " + label[3, i].ToString() + ", trv: " + label[4, i].ToString() + " },";
+                else
+                    chartdata += "{ x : '" + label[0, i].ToString() + "', gc: " + label[1, i].ToString() + ", tim: " + label[2, i].ToString() + ", cbi: " + label[3, i].ToString() + ", trv: " + label[4, i].ToString() + " }]";
+            }
+            return chartdata;
+        }
+
         public string LabelsSecByDay()
         {
             var t = new string[]{
@@ -241,9 +255,9 @@ namespace TrueFeedback
             }
             while (contdaysread < 11)
             {
-                tmoret += (0).ToString() + ",";
+                tmoret += "{ x: 'No Data', gc: 0, tim: 0, cbi: 0, trv: 0},";
             }
-            return tmoret + (0).ToString() + "]";
+            return tmoret + "{ x: 'No Data', gc: 0, tim: 0, cbi: 0, trv: 0}]";
         }
         //TMO CHARTS
         public string CalculateMonthTMO()
