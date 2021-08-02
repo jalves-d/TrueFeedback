@@ -1,6 +1,6 @@
 # TrueFeedback
 
-This project is being developed to optimize processes for the quality department of a contact center company, the code published will not be the final version of the project, but the prototype, after finalizing this version, a new version will probably be developed using MVC.
+This project is being developed to optimize processes for the quality department of a contact center company, the code published will be the prototype.
 
 Some of the features:
 
