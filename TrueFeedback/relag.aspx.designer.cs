@@ -42,6 +42,15 @@ namespace TrueFeedback
         protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
 
         /// <summary>
+        /// from control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText from;
+
+        /// <summary>
         /// Button1 control.
         /// </summary>
         /// <remarks>
@@ -60,22 +69,22 @@ namespace TrueFeedback
         protected global::System.Web.UI.WebControls.Button Button2;
 
         /// <summary>
-        /// Button4 control.
+        /// WeeklyChart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button4;
+        protected global::System.Web.UI.WebControls.Button WeeklyChart;
 
         /// <summary>
-        /// Button3 control.
+        /// DailyChart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button3;
+        protected global::System.Web.UI.WebControls.Button DailyChart;
 
         /// <summary>
         /// SqlDataSource1 control.

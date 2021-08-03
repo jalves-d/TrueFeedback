@@ -34,7 +34,7 @@
                             </div>
                             <div class="col-md-1">
                                 <div class="form-group">
-                                    <input class="form-control datepicker" type="text" id="from" name="from">
+                                    <input class="form-control datepicker" type="text" id="from" name="from" runat="server">
                                 </div>
                             </div>
                             <div class="col-md-1">
@@ -49,10 +49,10 @@
                                 <asp:Button class="btn btn-block btn-sucess btn-primary text-white" Style="background-color: #00008B" ID="Button2" runat="server" Text="Evolução Mês" BorderColor="White" />
                             </div>
                             <div class="col-md-1">
-                                <asp:Button class="btn btn-block btn-sucess btn-primary text-white" Style="background-color: #00008B" ID="Button4" runat="server" Text="Evolução Sem" BorderColor="White" />
+                                <asp:Button class="btn btn-block btn-sucess btn-primary text-white" Style="background-color: #00008B" OnClick="WeeklyChartClick" ID="WeeklyChart" runat="server" Text="Evolução Sem" BorderColor="White" />
                             </div>
                             <div class="col-md-1">
-                                <asp:Button class="btn btn-block btn-sucess btn-primary text-white" Style="background-color: #00008B" ID="Button3" runat="server" Text="Evolução Dia" BorderColor="White" />
+                                <asp:Button class="btn btn-block btn-sucess btn-primary text-white" Style="background-color: #00008B" OnClick="DailyChartClick" ID="DailyChart" runat="server" Text="Evolução Dia" BorderColor="White" />
                             </div>
                         </div>
                     </div>
@@ -181,15 +181,20 @@
                             <div class="chart-container" style="position: relative; height:35vh; width:20vw";>
                             <canvas id="myChart" width="200" height="150"></canvas>
                             <script>
+
+                                <%
+                                var labelsTMO = MonthtoLabels();
+                                var dataTMO = "";
+                                %>
                                 var ctx = document.getElementById('myChart');
 
                                 var myChart = new Chart(ctx, {
                                     type: 'bar',
                                     data: {
-                                        labels: <%=MonthtoLabels()%>,
+                                        labels: <%= labelsTMO %>,
                                         datasets: [{
                                             label: 'TMO',
-                                            data: <%=CalculateMonthTMO()%>,
+                                            data: <%= dataTMO %>,
                                             backgroundColor: [
                                                 'rgba(255, 99, 132, 0.2)',
                                                 'rgba(54, 162, 235, 0.2)',
@@ -225,12 +230,33 @@
                             <div class="chart-container" style="position: relative; height:35vh; width:45vw";>
                             <canvas id="myChartT" width="400" height="145"></canvas>
                             <script>
+                                <%
+
+                                var dataErrorRate = "";
+                                switch (GraphType)
+                                {
+                                    case 1:
+                                        dataErrorRate = SecChartMonth();
+                                        break;
+                                    case 2:
+                                        dataErrorRate = SecChartWeek();
+                                        break;
+                                    case 3:
+                                        dataErrorRate = LabelsSecByDay();
+                                        break;
+                                    default:
+                                        dataErrorRate = SecChartMonth();
+                                        break;
+                                }
+
+                                %>
+                                <%%> = dateControl;
                                 var ctx = document.getElementById('myChartT');
-                                const data = <%=SecChartMonth()%>;
+                                const data = <%= dataErrorRate %>;
                                 var myChartT = new Chart(ctx, {
                                     type: 'bar',
                                     data: {
-                                        labels: ['Jan', 'Feb'],
+                                        labels: ['Jan'],
                                         datasets: [{
                                             label: 'Gestões Corretas',
                                             data: data,

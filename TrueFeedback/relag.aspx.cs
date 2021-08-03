@@ -15,6 +15,14 @@ namespace TrueFeedback
     public partial class relag : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["feedb"].ConnectionString;
+
+        /// <summary>
+        /// 1 - Monthly Graph
+        /// 2 - Weekly Graph
+        /// 3 - Daily Graph
+        /// </summary>
+        public int GraphType { get; set; }
+
         protected void Page_Load(object sender, EventArgs e)
         {
         }
@@ -22,42 +30,39 @@ namespace TrueFeedback
         {
             CalculateDaysTMO();
         }
-        public string MonthtoLabels()
+
+        public void WeeklyChartClick(object sender, EventArgs e)
         {
-            string datas = "[";
-            int j = DateTime.Now.Month;
-            for(int i = 12; i > 0; i--) 
-            {
-                if (j == 0)
-                    j = 12;
-                if (i == 1)
-                    datas = datas + "'" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(j).Substring(0, 3) + "'";
-                else
-                    datas = datas + "'" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(j).Substring(0, 3) + "'" + ", ";
-                j--;
-            }
-            return datas + "]";
+            GraphType = 2;
         }
 
-        // ERROR RATE CHARTS
+        public void DailyChartClick(object sender, EventArgs e)
+        {
+            GraphType = 3;
+        }
+
+        #region Error Rate Charts
+
         public int[,] LabelsSecByMonth()
         {
-            var t = new string[]{
-                (!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""),
-                (!string.IsNullOrEmpty(TextBox2.Text) ? $"nif = '{TextBox2.Text}'" : ""),
-                }.Where((e) => { return !string.IsNullOrEmpty(e); });
+            var t = (DropDownList1.SelectedValue.ToString() == "Equipa") ?
+                new string[]{(!string.IsNullOrEmpty(TextBox1.Text) ? $"tp = '{TextBox1.Text}'" : ""), (!string.IsNullOrEmpty(TextBox2.Text) ? $"nif = '{TextBox2.Text}'" : ""),
+                }.Where((e) => { return !string.IsNullOrEmpty(e); }) : new string[] { ($"equipa = '" + DropDownList1.SelectedValue.ToString() + "'") };
             int[,] teste = new int[4, 12];
-            var ony = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
             var queryQuery = string.Join(" AND ", t);
+            queryQuery = string.IsNullOrEmpty(queryQuery) ? queryQuery : " AND " + queryQuery;
+            DateTime j = Request.Form["from"] != null ? new DateTime(int.Parse(Request.Form["from"].ToString().Substring(6, 4)), int.Parse(Request.Form["from"].ToString().Substring(0, 2)), int.Parse(Request.Form["from"].ToString().Substring(3, 2))) : DateTime.Now;
             SqlConnection feedb = new SqlConnection(strcon);
+            var ony = new DateTime(j.Year - 1, j.Month, j.Day);
             if (feedb.State == ConnectionState.Closed)
             {
                 feedb.Open();
             }
-            SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
-                "TrueFeedback.dbo.master_regdia_tbl WHERE " +
-                "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
-                "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
+            SqlCommand cmd = new SqlCommand("SELECT tp,name,equipa,nif,nif_r,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
+                "TrueFeedback.dbo.master_regdia_tbl,TrueFeedback.dbo.master_agent_tbl WHERE " +
+             "nif_r = nif" + queryQuery + " AND " +
+             "dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
+                "AND '" + j.ToString("yyyy/MM/d") + "'", feedb);
             SqlDataAdapter mydb = new SqlDataAdapter(cmd);
             DataTable dbtbl = new DataTable();
             mydb.Fill(dbtbl);
@@ -76,10 +81,10 @@ namespace TrueFeedback
                     contmonthsread++;
                 if (contmonthsread < 12)
                 {
-                    teste[0, (Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += (Int32.Parse(row["num_gest"].ToString()) - Int32.Parse(row["tr_imp"].ToString()) - Int32.Parse(row["cb_imp"].ToString()));
-                    teste[1, (Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["tr_imp"].ToString());
-                    teste[2, (Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["cb_imp"].ToString());
-                    teste[3, (Int32.Parse(row["dia"].ToString().Substring(0, s))) - 1] += Int32.Parse(row["tr_vend"].ToString());
+                    teste[0, contmonthsread] += (Int32.Parse(row["num_gest"].ToString()) - Int32.Parse(row["tr_imp"].ToString()) - Int32.Parse(row["cb_imp"].ToString()));
+                    teste[1, contmonthsread] += Int32.Parse(row["tr_imp"].ToString());
+                    teste[2, contmonthsread] += Int32.Parse(row["cb_imp"].ToString());
+                    teste[3, contmonthsread] += Int32.Parse(row["tr_vend"].ToString());
                 }
                 else
                     return teste;
@@ -100,8 +105,7 @@ namespace TrueFeedback
             int[] contmon = new int[12];
             int[,] label = new int[4, 12];
             string chartdata = "[";
-            int j = DateTime.Now.Month;
-
+            int j = Request.Form["from"] != null ? int.Parse(Request.Form["from"].ToString().Substring(0, 2)) : DateTime.Now.Month;
             for (int i = 0; i < 12; i++)
             {
                 if (j == 0)
@@ -190,12 +194,10 @@ namespace TrueFeedback
             label = LabelsSecByWeek();
             for (int i = 0; i < 12; i++)
             {
-                if (i != 0)
                     chartdata += "{ x : '" + label[0, i].ToString() + "', gc: " + label[1, i].ToString() + ", tim: " + label[2, i].ToString() + ", cbi: " + label[3, i].ToString() + ", trv: " + label[4, i].ToString() + " },";
-                else
-                    chartdata += "{ x : '" + label[0, i].ToString() + "', gc: " + label[1, i].ToString() + ", tim: " + label[2, i].ToString() + ", cbi: " + label[3, i].ToString() + ", trv: " + label[4, i].ToString() + " }]";
             }
-            return chartdata;
+            
+            return chartdata.TrimEnd(',') + "]";
         }
 
         public string LabelsSecByDay()
@@ -255,11 +257,32 @@ namespace TrueFeedback
             }
             while (contdaysread < 11)
             {
+                contdaysread++;
                 tmoret += "{ x: 'No Data', gc: 0, tim: 0, cbi: 0, trv: 0},";
             }
             return tmoret + "{ x: 'No Data', gc: 0, tim: 0, cbi: 0, trv: 0}]";
         }
-        //TMO CHARTS
+        #endregion
+
+
+        #region TMO Charts
+        public string MonthtoLabels()
+        {
+            string datas = "[";
+            int j = DateTime.Now.Month;
+            for (int i = 12; i > 0; i--)
+            {
+                if (j == 0)
+                    j = 12;
+                if (i == 1)
+                    datas = datas + "'" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(j).Substring(0, 3) + "'";
+                else
+                    datas = datas + "'" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(j).Substring(0, 3) + "'" + ", ";
+                j--;
+            }
+            return datas + "]";
+        }
+
         public string CalculateMonthTMO()
         {
             var t = new string[]{
@@ -274,8 +297,8 @@ namespace TrueFeedback
             {
                 feedb.Open();
             }
-            SqlCommand cmd = new SqlCommand("SELECT nif,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
-                "TrueFeedback.dbo.master_regdia_tbl WHERE " +
+            SqlCommand cmd = new SqlCommand("SELECT nif_r,tmo,num_gest,tr_vend,tr_imp,cb_imp,temp_dia,total_calls,dia FROM " +
+                "TrueFeedback.dbo.master_regdia_tbl WHERE" +
                 "TrueFeedback.dbo.master_regdia_tbl.dia BETWEEN '" + ony.ToString("yyyy/MM/d") + "'" +
                 "AND '" + DateTime.Now.ToString("yyyy/MM/d") + "'", feedb);
             SqlDataAdapter mydb = new SqlDataAdapter(cmd);
@@ -368,6 +391,10 @@ namespace TrueFeedback
                 i++;
             }
         }
+        /// <summary>
+        /// Calculate the amount of TMO days
+        /// </summary>
+        /// <returns></returns>
         public string CalculateDaysTMO()
         {
             var t = new string[]{
@@ -473,5 +500,7 @@ namespace TrueFeedback
                 return "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]";
             }
         }*/
+        #endregion
+
     }
 }
