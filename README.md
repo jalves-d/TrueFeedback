@@ -1,6 +1,6 @@
 # TrueFeedback
 
-This project is being developed to optimize processes for the quality department of a contact center company, the code published will be the prototype.
+This project is developed to optimize processes for the quality department of a contact center company, the code published is just a prototype.
 
 Some of the features:
 
@@ -9,14 +9,14 @@ Some of the features:
 - Daily log of data collected from the call system made by the administrator.
 - Consultation and Management of Feedback and Monitoring.
 
-Some of the features still to be implemented :
+Some of the features still to be implemented, probably will not be :
 
 - Monitoring the performance and evolution of agents, evaluators, and teams.
 - Encryption of user passwords.
 - Agent tracking page.
 - Issuance of reports generated from the data collected by the call system.
 
-I decided to develop this project due to my need to see applications of my learning in real world problems, if the application can be used in the future by the company, some changes will be made to the project.
+I decided to develop this project due to my need to see applications of my learning in real world problems.
 
 
 ![tfimgreg](https://user-images.githubusercontent.com/79873488/127357975-af30ab36-1afd-40dd-ac34-9043921ccdcd.jpg)
